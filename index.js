@@ -19,8 +19,22 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Case 1: directly recognized by Express server
 require("./routes/authRoutes")(app);
 require("./routes/billingRoutes")(app);
+
+if (process.env.NODE_ENV === "production") {
+  // Case 2: First check if file
+  // Express will serve up production assets like main.js or main.css
+  app.use(express.static("client/build"));
+
+  // Case 3: If no file found!
+  // Express will serve up the index.html file if it doesn't recognize the route
+  const path = require("path");
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT); // tell Node to listen on which port
