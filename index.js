@@ -4,6 +4,7 @@ const cookieSession = require("cookie-session"); // get access to cookie
 const passport = require("passport"); // tell passport to use cookie
 const bodyParser = require("body-parser");
 const keys = require("./config/keys");
+require("./models/Survey");
 require("./models/User");
 require("./services/passport");
 
@@ -22,6 +23,7 @@ app.use(passport.session());
 // Case 1: directly recognized by Express server
 require("./routes/authRoutes")(app);
 require("./routes/billingRoutes")(app);
+require("./routes/surveyRoutes")(app);
 
 if (process.env.NODE_ENV === "production") {
   // Case 2: First check if file
